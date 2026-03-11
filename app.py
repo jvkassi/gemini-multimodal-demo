@@ -98,9 +98,11 @@ def process_files(uploaded_files: List[Any]) -> None:
         
         suffix = os.path.splitext(uploaded_file.name)[1] or ""
         
-        with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp_file:
-            tmp_file.write(uploaded_file.getvalue())
-            tmp_file_path = tmp_file.name
+        data_dir = "/data"
+        os.makedirs(data_dir, exist_ok=True)
+        tmp_file_path = os.path.join(data_dir, f"{int(time.time())}_{uploaded_file.name}")
+        with open(tmp_file_path, "wb") as f:
+            f.write(uploaded_file.getvalue())
 
         try:
             with st.status(f"Processing {uploaded_file.name}...", expanded=True) as status:
